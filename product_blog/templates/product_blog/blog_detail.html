@@ -1,0 +1,9 @@
+{% extends 'Product_catalog/base.html' %}
+{% load custom_tag %}
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ object.title | title }} ({{object.slug }})</h1>
+    <p>{{ object.content }}</p>
+    <p>Просмотры: {{object.views_count }}</p>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'product_catalog/base.html' %}
+{% load custom_tag %}
+{% block content %}
+<div class="container">
+    <div class="col-3">
+        <a class="btn btn-outline-primary m-4" href="{% url 'catalog:create_product' %}">Добавить продукт</a>
+    </div>
+    <div class="row">
+        {% for object in object_list %}
+        <div class="col-md-3">
+            <div class="card m-2" style="width: 14rem;">
+                <img src="{{ object.image|make_image_link }}" class="img-fluid" alt="...">
+                <div class="card-body">
+                    <a class="card-title" href="{% url 'catalog:product_detail' pk=object.pk %}">
+                        {{ object.product_name | title }}
+                    </a>
+                    <p class="card-text">{{ object.description | cut_100_chars }}.</p>
+                    {% if object.is_active %}
+                    <a href="{% url 'catalog:toggle_activity' object.pk %}" class="btn btn-warning m-1">деактивировать</a>
+                    {% else %}
+                    <a href="{% url 'catalog:toggle_activity' object.pk %}" class="btn btn-success m-1">активировать</a>
+                    {% endif %}
+                    <a href="{% url 'catalog:update_product' object.pk %}" class="btn btn-primary m-1">редактировать</a>
+                    <a href="{% url 'catalog:delete_product' object.pk %}" class="btn btn-primary m-1">удалить</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
