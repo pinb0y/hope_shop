@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.base import TemplateView
 
 from product_catalog.models import Product
 
@@ -39,3 +40,6 @@ def toggle_activity(request, pk):
     product_item.save()
 
     return redirect(reverse("catalog:product_list"))
+
+class ContactTemplateView(TemplateView):
+    template_name = "product_catalog/contacts.html"

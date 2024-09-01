@@ -3,19 +3,19 @@
 {% block content %}
 <div class="container">
     <div class="col-12 mt-5">
-        <a class="btn btn-outline-primary" href="{% url 'blog:create' %}">Добавить Статью</a>
+        <a class="btn btn-outline-primary m-2" href="{% url 'blog:create' %}">Добавить Статью</a>
     </div>
     <div class="row">
         {% for object in object_list %}
-        <div class="col-md-4">
-            <div class="card m-4" style="width: 14rem;">
-
+        <div class="col-m-4">
+            <div class="card m-2">
+                <img class="image-fluid md-1" src="{{ object.preview | make_image_link }}">
                 <div class="card-body">
-                    <p class="card-title" >Статья {{ object.title | title }}</p>
+                    <h3 class="card-title">Статья {{ object.title | title }}</h3>
                     <p class="card-text">{{ object.body | cut_100_chars }}</p>
-                    <a href="{% url 'blog:view' object.pk %}" class="btn btn-primary mt-2" >Посмотреть</a>
-                    <a href="{% url 'blog:update' object.pk %}" class="btn btn-primary mt-2">Редактировать</a>
-                    <a href="{% url 'blog:delete' object.pk %}" class="btn btn-primary mt-2">Удалить</a>
+                    <a href="{% url 'blog:view' object.pk %}" class="btn btn-primary mt-2">Посмотреть</a>
+                    <a href="{% url 'blog:update' object.pk %}" class="btn btn-warning mt-2">Редактировать</a>
+                    <a href="{% url 'blog:delete' object.pk %}" class="btn btn-danger mt-2">Удалить</a>
                 </div>
             </div>
         </div>

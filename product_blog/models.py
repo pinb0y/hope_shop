@@ -12,3 +12,9 @@ class Blog(models.Model):
     is_published = models.BooleanField(verbose_name="Статус публикации")
     views_count = models.IntegerField(verbose_name="Счетчик просмотров", default=0)
 
+    class Meta:
+        verbose_name = "Блог"
+        verbose_name_plural = "Блоги"
+
+    def __str__(self):
+        return f"{self.title}"

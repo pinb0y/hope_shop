@@ -14,7 +14,7 @@ from product_blog.models import Blog
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = ("title", "body", "is_published")
+    fields = ("title", "body", "preview", "is_published")
     success_url = reverse_lazy("blog:list")
 
     def form_valid(self, form):
@@ -47,11 +47,7 @@ class BlogDetailView(DetailView):
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = (
-        "title",
-        "content",
-        "is_published",
-    )
+    fields = ("title", "body", "preview", "is_published")
 
     def form_valid(self, form):
         if form.is_valid():
@@ -68,3 +64,4 @@ class BlogUpdateView(UpdateView):
 class BlogDeleteView(DeleteView):
     model = Blog
     success_url = reverse_lazy("blog:list")
+

@@ -1,9 +1,10 @@
-{% extends 'Product_catalog/base.html' %}
+{% extends 'product_catalog/base.html' %}
 {% load custom_tag %}
 {% block content %}
-<div class="container mt-4">
-    <h1>{{ object.title | title }} ({{object.slug }})</h1>
-    <p>{{ object.content }}</p>
+<div class="container mt-2">
+    <h1>{{ object.title | title }})</h1>
+    <img class="image-fluid md-1" src="{{ object.preview | make_image_link }}">
+    <p>{{ object.body }}</p>
     <p>Просмотры: {{object.views_count }}</p>
 </div>
 {% endblock %}
