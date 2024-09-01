@@ -1,7 +1,13 @@
 from django.urls import path
 
 from product_blog.apps import ProductBlogConfig
-from product_blog.views import BlogListView, BlogDetailView, BlogCreateView, BlogUpdateView, BlogDeleteView
+from product_blog.views import (
+    BlogListView,
+    BlogDetailView,
+    BlogCreateView,
+    BlogUpdateView,
+    BlogDeleteView,
+)
 
 app_name = ProductBlogConfig.name
 

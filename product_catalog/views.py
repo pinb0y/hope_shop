@@ -1,6 +1,12 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from django.views.generic.base import TemplateView
 
 from product_catalog.models import Product
@@ -25,6 +31,7 @@ class ProductUpdateView(UpdateView):
     fields = ("product_name", "description", "price", "image")
     success_url = reverse_lazy("catalog:product_list")
 
+
 class ProductDeleteView(DeleteView):
     model = Product
     success_url = reverse_lazy("catalog:product_list")
@@ -40,6 +47,7 @@ def toggle_activity(request, pk):
     product_item.save()
 
     return redirect(reverse("catalog:product_list"))
+
 
 class ContactTemplateView(TemplateView):
     template_name = "product_catalog/contacts.html"

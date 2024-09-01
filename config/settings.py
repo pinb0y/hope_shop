@@ -21,9 +21,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    "product_catalog",
-    "product_blog",
+    "product_catalog",  # Каталог продуктов
+    "product_blog",  # Новостной блог
 ]
 
 MIDDLEWARE = [
@@ -100,9 +99,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATICFILES_DIRS = (
-    BASE_DIR / "static",
-)
+STATICFILES_DIRS = (BASE_DIR / "static",)
 
 # Default primary key field type
 
@@ -112,4 +109,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_URL = "media/"
 
-MEDIA_ROOT = (BASE_DIR / "media")
+MEDIA_ROOT = BASE_DIR / "media"
