@@ -1,0 +1,9 @@
+{% extends 'product_catalog/base.html' %}
+{% load custom_tag %}
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ object.product_name | title }} {{ object.price }} рублей</h1>
+    <p>{{ object.description }}</p>
+    <img src="{{ object.image | make_image_link }}" class="img-fluid m-4" alt='...'>
+</div>
+{% endblock %}
