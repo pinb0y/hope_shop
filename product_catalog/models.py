@@ -1,5 +1,3 @@
-from django.utils import timezone
-
 from django.db import models
 
 
@@ -24,11 +22,10 @@ class Product(models.Model):
         blank=True,
         related_name="products",
     )
+    standard = models.CharField(max_length=100, verbose_name="Стандарт на продукцию", null=True, blank=True, unique=True)
     price = models.IntegerField(verbose_name="цена за покупку")
-    created_at = models.DateField(default=timezone.now, verbose_name="Дата создания")
-    updated_at = models.DateField(
-        default=timezone.now, verbose_name="Дата последнего изменения"
-    )
+    created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateField(auto_now=True, verbose_name="Дата последнего изменения")
     is_active = models.BooleanField(default=True, verbose_name="Статус")
 
     def __str__(self):
@@ -37,6 +34,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+        ordering = ("id",)
 
 
 class Category(models.Model):

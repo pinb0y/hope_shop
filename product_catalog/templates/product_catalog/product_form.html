@@ -1,27 +1,27 @@
 {% extends 'product_catalog/base.html' %}
 
 {% block content %}
-
-<div class="col-12">
-    <div class="row">
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-success">
-                            {% if object %}
-                            Изменить
-                            {% else %}
-                            Создать
-                            {% endif %}
-                        </button>
-                    </form>
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    <div class="card m-4">
+                        <div class="card-body">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-success">
+                                {% if object %}
+                                Изменить
+                                {% else %}
+                                Создать
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
-
 {% endblock %}
