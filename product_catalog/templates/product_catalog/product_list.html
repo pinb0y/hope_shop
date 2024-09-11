@@ -15,10 +15,8 @@
                         {{ object.product_name | title }}
                     </a>
                     <p class="card-text">{{ object.description | cut_100_chars }}.</p>
-                    {% if object.is_active %}
-                    <a href="{% url 'catalog:toggle_activity' object.pk %}" class="btn btn-warning m-1">деактивировать</a>
-                    {% else %}
-                    <a href="{% url 'catalog:toggle_activity' object.pk %}" class="btn btn-success m-1">активировать</a>
+                    {% if object.active_version %}
+                    <p class="btn btn-success"> Актуальная версия <br> {{ object.active_version | title }}</p>
                     {% endif %}
                     <a href="{% url 'catalog:update_product' object.pk %}" class="btn btn-primary m-1">редактировать</a>
                     <a href="{% url 'catalog:delete_product' object.pk %}" class="btn btn-primary m-1">удалить</a>

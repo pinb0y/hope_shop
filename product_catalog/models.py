@@ -1,5 +1,3 @@
-from django.utils import timezone
-
 from django.db import models
 
 
@@ -25,11 +23,9 @@ class Product(models.Model):
         related_name="products",
     )
     price = models.IntegerField(verbose_name="цена за покупку")
-    created_at = models.DateField(default=timezone.now, verbose_name="Дата создания")
-    updated_at = models.DateField(
-        default=timezone.now, verbose_name="Дата последнего изменения"
-    )
-    is_active = models.BooleanField(default=True, verbose_name="Статус")
+    created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateField(auto_now=True, verbose_name="Дата последнего изменения")
+
 
     def __str__(self):
         return f"{self.product_name} ({self.description})"
@@ -37,6 +33,21 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+        ordering = ("id",)
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Продукт")
+    number = models.IntegerField(verbose_name="Номер версии")
+    name = models.CharField(max_length=100, verbose_name="Название версии")
+    is_active = models.BooleanField(verbose_name="Признак текущей версии")
+
+    class Meta:
+        verbose_name = "Версия"
+        verbose_name_plural = "Версии"
+
+    def __str__(self):
+        return f"{self.number} - {self.name}"
 
 
 class Category(models.Model):
