@@ -22,7 +22,6 @@ class Product(models.Model):
         blank=True,
         related_name="products",
     )
-    standard = models.CharField(max_length=100, verbose_name="Стандарт на продукцию", null=True, blank=True, unique=True)
     price = models.IntegerField(verbose_name="цена за покупку")
     created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateField(auto_now=True, verbose_name="Дата последнего изменения")
