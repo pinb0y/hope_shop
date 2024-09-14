@@ -14,7 +14,6 @@ class StyleFormMixin:
                 field.widget.attrs["class"] = "form-control"
 
 
-
 class ProductForm(StyleFormMixin, ModelForm):
     taboo_words = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция",
                    "радар"]
@@ -37,7 +36,17 @@ class ProductForm(StyleFormMixin, ModelForm):
                 raise ValidationError(f"слово <{word}> нельзя использовать в описании")
         return cleaned_data
 
+
 class VersionForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Version
         fields = "__all__"
+
+    def clean_is_active(self):
+        product = Product.objects.get(product_name="Тарелка")
+        versions = product.version_set.all()
+        cleaned_data = self.cleaned_data["is_active"]
+        for active_version in versions:
+            if active_version.is_active and cleaned_data:
+                raise ValidationError('Не может быт несколько актуальных версий')
+        return cleaned_data
