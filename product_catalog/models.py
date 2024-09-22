@@ -1,11 +1,9 @@
 from django.db import models
 
+from users.models import User
+
 
 class Product(models.Model):
-    """
-    Таблица товаров.
-    """
-
     product_name = models.CharField(max_length=100, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
     image = models.ImageField(
@@ -22,10 +20,10 @@ class Product(models.Model):
         blank=True,
         related_name="products",
     )
+    owner = models.ForeignKey(User, null=True, blank=True, verbose_name="Владелец", on_delete=models.SET_NULL)
     price = models.IntegerField(verbose_name="цена за покупку")
     created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateField(auto_now=True, verbose_name="Дата последнего изменения")
-
 
     def __str__(self):
         return f"{self.product_name} ({self.description})"
@@ -45,6 +43,11 @@ class Version(models.Model):
     class Meta:
         verbose_name = "Версия"
         verbose_name_plural = "Версии"
+        constraints = [
+            models.UniqueConstraint(fields=["product", "number"],
+                                    name='unique_versions',
+                                    violation_error_message="Номер версии должен быть уникальным")
+        ]
 
     def __str__(self):
         return f"{self.number} - {self.name}"
