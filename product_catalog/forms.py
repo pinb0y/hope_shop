@@ -20,7 +20,7 @@ class ProductForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = Product
-        fields = "__all__"
+        exclude = ("owner",)
 
     def clean_product_name(self):
         cleaned_data = self.cleaned_data["product_name"]
@@ -42,11 +42,11 @@ class VersionForm(StyleFormMixin, ModelForm):
         model = Version
         fields = "__all__"
 
-    def clean_is_active(self):
-        product = Product.objects.get(product_name="Тарелка")
-        versions = product.version_set.all()
-        cleaned_data = self.cleaned_data["is_active"]
-        for active_version in versions:
-            if active_version.is_active and cleaned_data:
-                raise ValidationError('Не может быт несколько актуальных версий')
-        return cleaned_data
+    # def clean_is_active(self):
+    #     product = Product.objects.get(product_name="Тарелка")
+    #     versions = product.version_set.all()
+    #     cleaned_data = self.cleaned_data["is_active"]
+    #     for active_version in versions:
+    #         if active_version.is_active and cleaned_data:
+    #             raise ValidationError('Не может быт несколько актуальных версий')
+    #     return cleaned_data

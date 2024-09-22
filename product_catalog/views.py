@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -13,7 +14,7 @@ from product_catalog.forms import ProductForm, VersionForm
 from product_catalog.models import Product, Version
 
 
-class ProductListView(ListView):
+class ProductListView(ListView, LoginRequiredMixin):
     model = Product
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -24,17 +25,23 @@ class ProductListView(ListView):
         return context_data
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(DetailView, LoginRequiredMixin):
     model = Product
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(CreateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(UpdateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
@@ -56,15 +63,15 @@ class ProductUpdateView(UpdateView):
             formset.instance = self.object
             formset.save()
 
-            # versions = Version.objects.filter(product=self.object, is_active=True)
-            # if len(versions) > 1:
-            #     form.add_error(None, 'Может быть только одна активная версия.')
-            #     return super().form_invalid(form)
+            versions = Version.objects.filter(product=self.object, is_active=True)
+            if len(versions) > 1: 
+                form.add_error(None, 'Может быть только одна активная версия.')
+                return super().form_invalid(form)
             return super().form_valid(form)
         else:
             return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(DeleteView, LoginRequiredMixin):
     model = Product
     success_url = reverse_lazy("catalog:product_list")
 
