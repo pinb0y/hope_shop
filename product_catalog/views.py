@@ -27,8 +27,10 @@ class ProductListView(UserLoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        for product in context_data['object_list']:
-            active_version = Version.objects.filter(product=product, is_active=True).first()
+        for product in context_data["object_list"]:
+            active_version = Version.objects.filter(
+                product=product, is_active=True
+            ).first()
             product.active_version = active_version
         return context_data
 
@@ -42,7 +44,6 @@ class ProductCreateView(UserLoginRequiredMixin, CreateView):
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
-
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
@@ -53,17 +54,13 @@ class ProductUpdateView(UserLoginRequiredMixin, UpdateView):
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if self.request.user == self.object.owner:
-            return self.object
-        raise PermissionDenied
-
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         ProductFormset = inlineformset_factory(Product, Version, VersionForm, extra=1)
         if self.request.method == "POST":
-            context_data["formset"] = ProductFormset(self.request.POST, instance=self.object)
+            context_data["formset"] = ProductFormset(
+                self.request.POST, instance=self.object
+            )
         else:
             context_data["formset"] = ProductFormset(instance=self.object)
         return context_data
@@ -78,18 +75,25 @@ class ProductUpdateView(UserLoginRequiredMixin, UpdateView):
 
             versions = Version.objects.filter(product=self.object, is_active=True)
             if len(versions) > 1:
-                form.add_error(None, 'Может быть только одна активная версия.')
+                form.add_error(None, "Может быть только одна активная версия.")
                 return super().form_invalid(form)
             return super().form_valid(form)
         else:
-            return self.render_to_response(self.get_context_data(form=form, formset=formset))
+            return self.render_to_response(
+                self.get_context_data(form=form, formset=formset)
+            )
 
     def get_form_class(self):
         user = self.request.user
         if user == self.object.owner:
             return ProductForm
-        if user.has_perms(("product_catalog.change_description", "product_catalog.change_category",
-                           "product_catalog.set_published")):
+        if user.has_perms(
+            (
+                "product_catalog.change_description",
+                "product_catalog.change_category",
+                "product_catalog.set_published",
+            )
+        ):
             return ProductModeratorForm
         raise PermissionDenied
 

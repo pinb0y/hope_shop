@@ -15,8 +15,17 @@ class StyleFormMixin:
 
 
 class ProductForm(StyleFormMixin, ModelForm):
-    taboo_words = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция",
-                   "радар"]
+    taboo_words = [
+        "казино",
+        "криптовалюта",
+        "крипта",
+        "биржа",
+        "дешево",
+        "бесплатно",
+        "обман",
+        "полиция",
+        "радар",
+    ]
 
     class Meta:
         model = Product
@@ -36,9 +45,19 @@ class ProductForm(StyleFormMixin, ModelForm):
                 raise ValidationError(f"слово <{word}> нельзя использовать в описании")
         return cleaned_data
 
+
 class ProductModeratorForm(StyleFormMixin, ModelForm):
-    taboo_words = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция",
-                   "радар"]
+    taboo_words = [
+        "казино",
+        "криптовалюта",
+        "крипта",
+        "биржа",
+        "дешево",
+        "бесплатно",
+        "обман",
+        "полиция",
+        "радар",
+    ]
 
     class Meta:
         model = Product

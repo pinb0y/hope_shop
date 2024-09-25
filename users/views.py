@@ -30,9 +30,10 @@ class RegisterView(CreateView):
             subject="Подтверждение почты",
             message=f"Добрый день! Перейдите по ссылке для подтверждения {url}",
             from_email=EMAIL_HOST_USER,
-            recipient_list=[user.email]
+            recipient_list=[user.email],
         )
         return super().form_valid(form)
+
 
 class ProfileView(UserLoginRequiredMixin, UpdateView):
     model = User
@@ -42,19 +43,21 @@ class ProfileView(UserLoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+
 def email_verification(requests, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.save()
     return redirect(reverse("users:login"))
 
+
 class UserResetPasswordView(UserLoginRequiredMixin, PasswordResetView):
     form_class = ResetPasswordForm
-    template_name = 'users/reset_password.html'
-    success_url = reverse_lazy('users:login')
+    template_name = "users/reset_password.html"
+    success_url = reverse_lazy("users:login")
 
     def form_valid(self, form):
-        email = form.cleaned_data['email']
+        email = form.cleaned_data["email"]
         try:
             user = User.objects.get(email=email)
             if user:
@@ -62,14 +65,14 @@ class UserResetPasswordView(UserLoginRequiredMixin, PasswordResetView):
                 user.set_password(password)
                 user.save()
                 send_mail(
-                    subject='Сброс пароля',
-                    message=f' Ваш новый пароль {password}',
+                    subject="Сброс пароля",
+                    message=f" Ваш новый пароль {password}",
                     from_email=EMAIL_HOST_USER,
-                    recipient_list=[user.email]
+                    recipient_list=[user.email],
                 )
-            return redirect(reverse('users:login'))
+            return redirect(reverse("users:login"))
         except:
-            return redirect(reverse('users:no_email'))
+            return redirect(reverse("users:no_email"))
 
 
 class NotMailPageView(UserLoginRequiredMixin, TemplateView):
