@@ -20,7 +20,7 @@ class ProductForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = Product
-        exclude = ("owner",)
+        fields = "__all__"
 
     def clean_product_name(self):
         cleaned_data = self.cleaned_data["product_name"]
@@ -28,6 +28,21 @@ class ProductForm(StyleFormMixin, ModelForm):
             if word in cleaned_data.lower():
                 raise ValidationError(f"слово <{word}> нельзя использовать в имени")
         return cleaned_data
+
+    def clean_description(self):
+        cleaned_data = self.cleaned_data["description"]
+        for word in self.taboo_words:
+            if word in cleaned_data.lower():
+                raise ValidationError(f"слово <{word}> нельзя использовать в описании")
+        return cleaned_data
+
+class ProductModeratorForm(StyleFormMixin, ModelForm):
+    taboo_words = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция",
+                   "радар"]
+
+    class Meta:
+        model = Product
+        fields = ("description", "category", "is_published")
 
     def clean_description(self):
         cleaned_data = self.cleaned_data["description"]

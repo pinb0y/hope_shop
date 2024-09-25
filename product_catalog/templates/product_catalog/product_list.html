@@ -2,12 +2,12 @@
 {% load custom_tag %}
 {% block content %}
 <div class="container">
-    {% if user.is_authenticated %}
     <div class="col-3">
         <a class="btn btn-outline-primary m-4" href="{% url 'catalog:create_product' %}">Добавить продукт</a>
     </div>
     <div class="row">
         {% for object in object_list %}
+        {% if object.is_published %}
         <div class="col-md-3">
             <div class="card m-2" style="width: 14rem;">
                 <img src="{{ object.image|make_image_link }}" class="img-fluid" alt="...">
@@ -19,15 +19,17 @@
                     {% if object.active_version %}
                     <p class="btn btn-success"> Актуальная версия <br> {{ object.active_version | title }}</p>
                     {% endif %}
+                    {% if perms.product_catalog.set_published or user == object.owner %}
                     <a href="{% url 'catalog:update_product' object.pk %}" class="btn btn-primary m-1">редактировать</a>
+                    {% endif %}
                     <a href="{% url 'catalog:delete_product' object.pk %}" class="btn btn-primary m-1">удалить</a>
+
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
-    {% else %}
-    <h3>Авторизуйтесь, чтобы увидеть товары или почитайте блог</h3>
-    {% endif %}
+
 </div>
 {% endblock %}
