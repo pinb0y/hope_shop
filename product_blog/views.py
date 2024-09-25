@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy, reverse
 
 from django.views.generic import (
@@ -10,11 +11,13 @@ from django.views.generic import (
 from pytils.translit import slugify
 
 from product_blog.models import Blog
+from product_catalog.views import UserLoginRequiredMixin
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(UserLoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Blog
     fields = ("title", "body", "preview", "is_published")
+    permission_required = "product_blog.add_blog"
     success_url = reverse_lazy("blog:list")
 
     def form_valid(self, form):
@@ -27,7 +30,7 @@ class BlogCreateView(CreateView):
         return super().form_valid(form)
 
 
-class BlogListView(ListView):
+class BlogListView(UserLoginRequiredMixin, ListView):
     model = Blog
 
     def get_queryset(self, *args, **kwargs):
@@ -37,7 +40,7 @@ class BlogListView(ListView):
         return queryset
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(UserLoginRequiredMixin, DetailView):
     model = Blog
 
     def get_object(self, queryset=None):
@@ -49,9 +52,10 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(UserLoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Blog
     fields = ("title", "body", "preview", "is_published")
+    permission_required = "product_blog.change_blog"
 
     def form_valid(self, form):
         """Переопределяем метод чтобы был красивый слаг"""
@@ -67,6 +71,8 @@ class BlogUpdateView(UpdateView):
         return reverse("blog:view", args=[self.kwargs.get("pk")])
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(UserLoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy("blog:list")
+    permission_required = "product_blog.delete_blog"
+

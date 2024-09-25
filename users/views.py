@@ -7,12 +7,12 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, TemplateView
 
 from config.settings import EMAIL_HOST_USER
-from product_catalog.forms import StyleFormMixin
+from product_catalog.views import UserLoginRequiredMixin
 from users.forms import UserRegisterForm, UserProfileForm, ResetPasswordForm
 from users.models import User
 
 
-class RegisterView(CreateView,StyleFormMixin):
+class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = "users/register.html"
@@ -34,7 +34,7 @@ class RegisterView(CreateView,StyleFormMixin):
         )
         return super().form_valid(form)
 
-class ProfileView(UpdateView, StyleFormMixin):
+class ProfileView(UserLoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     success_url = reverse_lazy("catalog:product_list")
@@ -48,7 +48,7 @@ def email_verification(requests, token):
     user.save()
     return redirect(reverse("users:login"))
 
-class UserResetPasswordView(PasswordResetView, StyleFormMixin):
+class UserResetPasswordView(UserLoginRequiredMixin, PasswordResetView):
     form_class = ResetPasswordForm
     template_name = 'users/reset_password.html'
     success_url = reverse_lazy('users:login')
@@ -72,5 +72,5 @@ class UserResetPasswordView(PasswordResetView, StyleFormMixin):
             return redirect(reverse('users:no_email'))
 
 
-class NotMailPageView(TemplateView):
+class NotMailPageView(UserLoginRequiredMixin, TemplateView):
     template_name = "users/no_email.html"

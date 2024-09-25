@@ -24,6 +24,7 @@ class Product(models.Model):
     price = models.IntegerField(verbose_name="цена за покупку")
     created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateField(auto_now=True, verbose_name="Дата последнего изменения")
+    is_published = models.BooleanField(default=False, verbose_name="Статус публикации")
 
     def __str__(self):
         return f"{self.product_name} ({self.description})"
@@ -32,6 +33,11 @@ class Product(models.Model):
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
         ordering = ("id",)
+        permissions = [
+            ("set_published", "Can publish products"),
+            ("change_description", "Can change description"),
+            ("change_category", "Can change category"),
+        ]
 
 
 class Version(models.Model):

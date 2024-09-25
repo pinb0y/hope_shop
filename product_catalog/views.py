@@ -1,4 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from itertools import product
+
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -10,11 +13,16 @@ from django.views.generic import (
 )
 from django.views.generic.base import TemplateView
 
-from product_catalog.forms import ProductForm, VersionForm
+from product_catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from product_catalog.models import Product, Version
 
 
-class ProductListView(ListView, LoginRequiredMixin):
+class UserLoginRequiredMixin(LoginRequiredMixin):
+    login_url = "/users/"
+    permission_denied_message = "только для авторизованных пользователей"
+
+
+class ProductListView(UserLoginRequiredMixin, ListView):
     model = Product
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -25,26 +33,31 @@ class ProductListView(ListView, LoginRequiredMixin):
         return context_data
 
 
-class ProductDetailView(DetailView, LoginRequiredMixin):
+class ProductDetailView(UserLoginRequiredMixin, DetailView):
     model = Product
 
 
-class ProductCreateView(CreateView, LoginRequiredMixin):
+class ProductCreateView(UserLoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
+
 
     def form_valid(self, form):
-        product = form.save()
-        user = self.request.user
-        product.owner = user
-        product.save()
+        form.instance.owner = self.request.user
         return super().form_valid(form)
 
-class ProductUpdateView(UpdateView, LoginRequiredMixin):
+
+class ProductUpdateView(UserLoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            return self.object
+        raise PermissionDenied
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -64,17 +77,27 @@ class ProductUpdateView(UpdateView, LoginRequiredMixin):
             formset.save()
 
             versions = Version.objects.filter(product=self.object, is_active=True)
-            if len(versions) > 1: 
+            if len(versions) > 1:
                 form.add_error(None, 'Может быть только одна активная версия.')
                 return super().form_invalid(form)
             return super().form_valid(form)
         else:
             return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
-class ProductDeleteView(DeleteView, LoginRequiredMixin):
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return ProductForm
+        if user.has_perms(("product_catalog.change_description", "product_catalog.change_category",
+                           "product_catalog.set_published")):
+            return ProductModeratorForm
+        raise PermissionDenied
+
+
+class ProductDeleteView(UserLoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy("catalog:product_list")
 
 
-class ContactTemplateView(TemplateView):
+class ContactTemplateView(UserLoginRequiredMixin, TemplateView):
     template_name = "product_catalog/contacts.html"

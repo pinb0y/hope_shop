@@ -62,7 +62,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "hw_20",
         "USER": "postgres",
-        "PASSWORD": "84478447",
+        "PASSWORD": ...,
         "HOST": "localhost",
         "PORT": "5432",
     }
@@ -113,6 +113,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 AUTH_USER_MODEL = "users.User"
 
+
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
@@ -125,3 +126,4 @@ EMAIL_USE_SSL = True
 
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
