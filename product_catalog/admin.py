@@ -26,7 +26,7 @@ class CategoryAdmin(admin.ModelAdmin):
         "category_name",
     )
 
+
 @admin.register(Version)
 class VersionAdmin(admin.ModelAdmin):
     list_display = ("product", "number", "name", "is_active")
-

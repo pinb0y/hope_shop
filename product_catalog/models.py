@@ -20,10 +20,14 @@ class Product(models.Model):
         blank=True,
         related_name="products",
     )
-    owner = models.ForeignKey(User, null=True, blank=True, verbose_name="Владелец", on_delete=models.SET_NULL)
+    owner = models.ForeignKey(
+        User, null=True, blank=True, verbose_name="Владелец", on_delete=models.SET_NULL
+    )
     price = models.IntegerField(verbose_name="цена за покупку")
     created_at = models.DateField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateField(auto_now=True, verbose_name="Дата последнего изменения")
+    updated_at = models.DateField(
+        auto_now=True, verbose_name="Дата последнего изменения"
+    )
     is_published = models.BooleanField(default=False, verbose_name="Статус публикации")
 
     def __str__(self):
@@ -41,7 +45,9 @@ class Product(models.Model):
 
 
 class Version(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Продукт")
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, verbose_name="Продукт"
+    )
     number = models.IntegerField(verbose_name="Номер версии")
     name = models.CharField(max_length=100, verbose_name="Название версии")
     is_active = models.BooleanField(verbose_name="Признак текущей версии")
@@ -50,9 +56,11 @@ class Version(models.Model):
         verbose_name = "Версия"
         verbose_name_plural = "Версии"
         constraints = [
-            models.UniqueConstraint(fields=["product", "number"],
-                                    name='unique_versions',
-                                    violation_error_message="Номер версии должен быть уникальным")
+            models.UniqueConstraint(
+                fields=["product", "number"],
+                name="unique_versions",
+                violation_error_message="Номер версии должен быть уникальным",
+            )
         ]
 
     def __str__(self):

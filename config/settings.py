@@ -62,7 +62,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "hw_20",
         "USER": "postgres",
-        "PASSWORD": ...,
+        "PASSWORD": "84478447",
         "HOST": "localhost",
         "PORT": "5432",
     }
@@ -118,7 +118,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 # mail settings
-EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST = "smtp.yandex.ru"
 EMAIL_PORT = 465
 EMAIL_HOST_USER = ...
 EMAIL_HOST_PASSWORD = ...
@@ -126,4 +126,3 @@ EMAIL_USE_SSL = True
 
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-

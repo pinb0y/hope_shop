@@ -75,4 +75,3 @@ class BlogDeleteView(UserLoginRequiredMixin, PermissionRequiredMixin, DeleteView
     model = Blog
     success_url = reverse_lazy("blog:list")
     permission_required = "product_blog.delete_blog"
-
