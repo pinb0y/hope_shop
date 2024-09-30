@@ -133,3 +133,6 @@ dmypy.json
 
 # Database fixtures
 data_fixtures/
+
+# media
+media/
