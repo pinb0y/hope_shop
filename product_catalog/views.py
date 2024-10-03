@@ -1,5 +1,3 @@
-from unicodedata import category
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
@@ -111,3 +109,5 @@ class ContactTemplateView(UserLoginRequiredMixin, TemplateView):
 class CategoryListView(UserLoginRequiredMixin, ListView):
     model = Category
 
+    def get_queryset(self):
+        return get_cashed_categories()

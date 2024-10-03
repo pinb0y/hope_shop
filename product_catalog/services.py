@@ -4,14 +4,19 @@ from config.settings import CACHE_ENABLED
 from product_catalog.models import Category
 
 
-def get_cashed_categories(category_pk):
-    if CACHE_ENABLED:
-        key = f"category_list_{category_pk}"
-        category_list = cache.get(key)
-        if category_list is None:
-            category_list = Category.objects.all()
-            cache.set(key, category_list)
-    else:
-        category_list = Category.objects.all()
+def get_cashed_categories():
+    """
+    Возвращает список категорий из кеша или из БД если кеша нет
+    """
+    categories = Category.objects.all()
+    if not CACHE_ENABLED:
+        return categories
 
-    return category_list
+    key = "category_list"
+    cached_categories = cache.get(key)
+
+    if cached_categories is not None:
+        return cached_categories
+
+    cache.set(key, categories)
+    return categories

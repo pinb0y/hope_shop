@@ -8,10 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-99s1a3ne4+nkcy*v0c2$#23j1c77jt=%8-t(n=9!$*!-b3n0w*"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG_MODE", False) == "True"
 
 ALLOWED_HOSTS = []
 
@@ -121,8 +121,8 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 # mail settings
-EMAIL_HOST = "smtp.yandex.ru"
-EMAIL_PORT = 465
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_SSL = True
@@ -132,7 +132,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # cache
 
-CACHE_ENABLED = os.getenv("CACHED_ENABLED") == True
+CACHE_ENABLED = os.getenv("CACHE_ENABLED", False) == "True"
 
 if CACHE_ENABLED:
     CACHES = {
