@@ -1,7 +1,11 @@
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-99s1a3ne4+nkcy*v0c2$#23j1c77jt=%8-t(n=9!$*!-b3n0w*"
@@ -60,11 +64,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "hw_20",
-        "USER": "postgres",
-        "PASSWORD": "84478447",
+        "NAME": "hope_shop",
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": "localhost",
-        "PORT": "5432",
     }
 }
 
@@ -111,8 +114,8 @@ MEDIA_URL = "media/"
 
 MEDIA_ROOT = BASE_DIR / "media"
 
+# users
 AUTH_USER_MODEL = "users.User"
-
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
@@ -120,9 +123,21 @@ LOGOUT_REDIRECT_URL = "/"
 # mail settings
 EMAIL_HOST = "smtp.yandex.ru"
 EMAIL_PORT = 465
-EMAIL_HOST_USER = ...
-EMAIL_HOST_PASSWORD = ...
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_SSL = True
 
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# cache
+
+CACHE_ENABLED = os.getenv("CACHED_ENABLED") == True
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv("CACHE_LOCATION"),
+        }
+    }

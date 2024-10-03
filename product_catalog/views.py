@@ -1,6 +1,6 @@
-from itertools import product
+from unicodedata import category
 
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
@@ -14,12 +14,13 @@ from django.views.generic import (
 from django.views.generic.base import TemplateView
 
 from product_catalog.forms import ProductForm, VersionForm, ProductModeratorForm
-from product_catalog.models import Product, Version
+from product_catalog.models import Product, Version, Category
+from product_catalog.services import get_cashed_categories
 
 
 class UserLoginRequiredMixin(LoginRequiredMixin):
     login_url = "/users/"
-    permission_denied_message = "только для авторизованных пользователей"
+    permission_denied_message = "Только для авторизованных пользователей"
 
 
 class ProductListView(UserLoginRequiredMixin, ListView):
@@ -88,11 +89,11 @@ class ProductUpdateView(UserLoginRequiredMixin, UpdateView):
         if user == self.object.owner:
             return ProductForm
         if user.has_perms(
-            (
-                "product_catalog.change_description",
-                "product_catalog.change_category",
-                "product_catalog.set_published",
-            )
+                (
+                        "product_catalog.change_description",
+                        "product_catalog.change_category",
+                        "product_catalog.set_published",
+                )
         ):
             return ProductModeratorForm
         raise PermissionDenied
@@ -105,3 +106,8 @@ class ProductDeleteView(UserLoginRequiredMixin, DeleteView):
 
 class ContactTemplateView(UserLoginRequiredMixin, TemplateView):
     template_name = "product_catalog/contacts.html"
+
+
+class CategoryListView(UserLoginRequiredMixin, ListView):
+    model = Category
+

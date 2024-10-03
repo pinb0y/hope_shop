@@ -5,5 +5,31 @@
     <h1>{{ object.product_name | title }} {{ object.price }} рублей</h1>
     <p>{{ object.description }}</p>
     <img src="{{ object.image | make_image_link }}" class="img-fluid m-4" alt='...'>
+
+    <h3> Версии товара</h3>
+    <div class="col-12">
+        <div class="row">
+            {% for version in object.version_set.all %}
+            {% if version.is_active %}
+            <div class="col-2">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        {{ version }} Активная версия
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-2">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        {{ version }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 </div>
+
 {% endblock %}
