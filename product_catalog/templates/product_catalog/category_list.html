@@ -1,0 +1,20 @@
+{% extends 'product_catalog/base.html' %}
+{% load custom_tag %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% for object in object_list %}
+        <div class="col-md-3">
+            <div class="card m-2" style="width: 14rem;">
+                <div class="card-body">
+                    <a class="card-title" href="#">
+                        {{ object.category_name | title }}
+                    </a>
+                    <p class="card-text">{{ object.description | cut_100_chars }}.</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

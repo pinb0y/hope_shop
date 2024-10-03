@@ -5,6 +5,10 @@ from product_catalog.models import Product, Version
 
 
 class StyleFormMixin:
+    """
+    Примесь единообразного стиля для форм
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
@@ -15,6 +19,9 @@ class StyleFormMixin:
 
 
 class ProductForm(StyleFormMixin, ModelForm):
+    """
+    Форма для создания продукта
+    """
     taboo_words = [
         "казино",
         "криптовалюта",
@@ -32,6 +39,9 @@ class ProductForm(StyleFormMixin, ModelForm):
         fields = "__all__"
 
     def clean_product_name(self):
+        """
+        Запрещает использовать определенные слова в названии продукта
+        """
         cleaned_data = self.cleaned_data["product_name"]
         for word in self.taboo_words:
             if word in cleaned_data.lower():
@@ -39,6 +49,9 @@ class ProductForm(StyleFormMixin, ModelForm):
         return cleaned_data
 
     def clean_description(self):
+        """
+        Запрещает использовать определенные слова в описании продукта
+        """
         cleaned_data = self.cleaned_data["description"]
         for word in self.taboo_words:
             if word in cleaned_data.lower():
@@ -47,6 +60,9 @@ class ProductForm(StyleFormMixin, ModelForm):
 
 
 class ProductModeratorForm(StyleFormMixin, ModelForm):
+    """
+    Форма для создания продукта модератором с расширенными правами
+    """
     taboo_words = [
         "казино",
         "криптовалюта",
@@ -72,15 +88,9 @@ class ProductModeratorForm(StyleFormMixin, ModelForm):
 
 
 class VersionForm(StyleFormMixin, ModelForm):
+    """
+    Форма для создания версии продукта
+    """
     class Meta:
         model = Version
         fields = "__all__"
-
-    # def clean_is_active(self):
-    #     product = Product.objects.get(product_name="Тарелка")
-    #     versions = product.version_set.all()
-    #     cleaned_data = self.cleaned_data["is_active"]
-    #     for active_version in versions:
-    #         if active_version.is_active and cleaned_data:
-    #             raise ValidationError('Не может быт несколько актуальных версий')
-    #     return cleaned_data
